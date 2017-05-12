@@ -1,0 +1,73 @@
+buildscript {
+	ext {
+		springBootVersion = '2.0.0.BUILD-SNAPSHOT'
+	}
+	repositories {
+		mavenCentral()
+		maven { url "https://repo.spring.io/snapshot" }
+		maven { url "https://repo.spring.io/milestone" }
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'application'
+
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+// doma setup
+processResources.destinationDir = compileJava.destinationDir
+compileJava.dependsOn processResources
+
+def aptGeneratePath = 'src/apt_generated'
+compileJava.options.compilerArgs = ['-s', aptGeneratePath]
+new File(aptGeneratePath).mkdirs()
+
+mainClassName = "hello.Application"
+
+println sourceSets.main.output.classesDir
+
+idea {
+	module {
+		inheritOutputDirs = false
+		outputDir = file("$buildDir/classes/main/")
+	}
+}
+sourceSets {
+	main {
+		java {
+			srcDirs = [
+					'src/main/java',
+					aptGeneratePath
+			]
+		}
+	}
+}
+
+
+
+repositories {
+	mavenCentral()
+	maven { url "https://repo.spring.io/snapshot" }
+	maven { url "https://repo.spring.io/milestone" }
+	maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+}
+
+
+dependencies {
+	compile("org.springframework.boot:spring-boot-starter-web")
+
+	runtime('mysql:mysql-connector-java')
+
+	// doma
+	compile "org.seasar.doma:doma:2.16.0"
+	compile 'org.seasar.doma.boot:doma-spring-boot-starter:1.1.0'
+
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}

@@ -1,0 +1,12 @@
+# Spring Core
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:13306/research
+    username: root
+    password: password
+
+# Doma2 Reference URL <https://github.com/domaframework/doma-spring-boot>
+#doma:
+#  dialect: mysql
+#  sql-file-repository: no_cache
